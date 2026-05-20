@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Checkout - NovaMart{% endblock %}
+{% block content %}
+<section class="page-header compact">
+    <div class="container"><span class="eyebrow">Checkout</span><h1>Shipping & Payment</h1></div>
+</section>
+<section class="container section-block">
+    <form method="post" class="row g-4">
+        {% csrf_token %}
+        <div class="col-lg-8">
+            <div class="content-panel">
+                <h4>Shipping Details</h4>
+                <div class="row g-3">
+                    {% for field in form %}
+                    {% if field.name != "payment_method" %}
+                    <div class="col-md-6">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% for error in field.errors %}<div class="invalid-note">{{ error }}</div>{% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="content-panel mt-4">
+                <h4>Payment Method</h4>
+                <div class="payment-options">{{ form.payment_method }}</div>
+                <div class="alert alert-info mt-3 mb-0">Payment UI is for project demonstration only. No real gateway is connected.</div>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <div class="summary-panel">
+                <h4>Order Summary</h4>
+                {% for item in cart.items.all %}
+                <div><span>{{ item.product.name }} x {{ item.quantity }}</span><strong>₹{{ item.line_total|floatformat:2 }}</strong></div>
+                {% endfor %}
+                <hr>
+                <div><span>Subtotal</span><strong>₹{{ cart.subtotal|floatformat:2 }}</strong></div>
+                <div><span>Cashback Earned</span><strong>₹{{ cart.cashback_total|floatformat:2 }}</strong></div>
+                <button class="btn btn-accent w-100 btn-lg mt-3">Place Demo Order</button>
+            </div>
+        </div>
+    </form>
+</section>
+{% endblock %}

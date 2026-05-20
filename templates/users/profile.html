@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Profile - NovaMart{% endblock %}
+{% block content %}
+<section class="page-header compact">
+    <div class="container">
+        <span class="eyebrow">Account</span>
+        <h1>{{ user.get_full_name|default:user.username }}</h1>
+        <p>Manage shipping details and review recent orders.</p>
+    </div>
+</section>
+<section class="container section-block">
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="content-panel">
+                <h4>Profile Details</h4>
+                <form method="post" enctype="multipart/form-data" class="row g-3">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="col-md-6">
+                        <label class="form-label">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                    {% endfor %}
+                    <div class="col-12"><button class="btn btn-accent">Save Profile</button></div>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="content-panel">
+                <h4>Recent Orders</h4>
+                {% for order in orders %}
+                <div class="order-mini">
+                    <strong>Order #{{ order.id }}</strong>
+                    <span>₹{{ order.total|floatformat:2 }} · {{ order.get_status_display }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted mb-0">No orders yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

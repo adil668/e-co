@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{{ product.name }} - NovaMart{% endblock %}
+{% block content %}
+<section class="container section-block">
+    <div class="row g-5">
+        <div class="col-lg-6">
+            <div class="detail-gallery">
+                <div class="main-product-image zoomable">
+                    {% if product.display_image %}<img id="mainProductImage" src="{{ product.display_image }}" alt="{{ product.name }}">{% else %}<img id="mainProductImage" src="{% static product.fallback_image %}" alt="{{ product.name }}">{% endif %}
+                </div>
+                <div class="thumb-row">
+                    {% if product.display_image %}<button class="thumb active" data-src="{{ product.display_image }}"><img src="{{ product.display_image }}" alt=""></button>{% else %}<button class="thumb active" data-src="{% static product.fallback_image %}"><img src="{% static product.fallback_image %}" alt=""></button>{% endif %}
+                    {% for image in product.gallery.all %}
+                    {% if image.display_image %}<button class="thumb" data-src="{{ image.display_image }}"><img src="{{ image.display_image }}" alt="{{ image.alt_text }}"></button>{% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="detail-info">
+                <div class="product-brand">{{ product.brand|default:"Nova Select" }}</div>
+                <h1>{{ product.name }}</h1>
+                <div class="rating-row mb-3"><span class="rating-pill"><i class="bi bi-star-fill"></i> {{ product.rating }}</span><span class="text-muted">Verified ratings and reviews</span></div>
+                <div class="detail-price">₹{{ product.discount_price|floatformat:2 }} {% if product.discount_percentage %}<span>₹{{ product.price|floatformat:2 }}</span>{% endif %}</div>
+                <p class="text-muted">{{ product.description }}</p>
+                <div class="detail-offer-grid">
+                    <div><i class="bi bi-shield-check"></i><strong>Assured</strong><span>Quality checked</span></div>
+                    <div><i class="bi bi-arrow-repeat"></i><strong>7 Days</strong><span>Easy returns</span></div>
+                    <div><i class="bi bi-credit-card"></i><strong>Demo Pay</strong><span>Card, UPI, COD</span></div>
+                </div>
+                {% if product.cashback_percentage %}<div class="cashback-alert"><i class="bi bi-lightning-charge-fill"></i> Earn ₹{{ product.cashback_amount|floatformat:2 }} cashback on this item.</div>{% endif %}
+                <div class="stock-line {% if product.in_stock %}text-success{% else %}text-danger{% endif %}">
+                    <i class="bi bi-check-circle"></i> {% if product.in_stock %}In stock - {{ product.stock_quantity }} units available{% else %}Currently unavailable{% endif %}
+                </div>
+                <div class="delivery-box">
+                    <i class="bi bi-truck"></i>
+                    <div><strong>Fast delivery</strong><span>Free delivery on orders above ₹999. Easy returns within 7 days.</span></div>
+                </div>
+                <div class="d-flex gap-3 mt-4">
+                    <form method="post" action="{% url 'cart:add' product.id %}" class="add-cart-form flex-fill">{% csrf_token %}<button class="btn btn-accent btn-lg w-100"><i class="bi bi-cart-plus"></i> Add to Cart</button></form>
+                    <form method="post" action="{% url 'cart:add' product.id %}" class="flex-fill">{% csrf_token %}<input type="hidden" name="next" value="checkout"><button class="btn btn-dark-blue btn-lg w-100">Buy Now</button></form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-4 mt-4">
+        <div class="col-lg-7">
+            <div class="content-panel">
+                <h4>Specifications</h4>
+                <ul class="spec-list">
+                    {% for spec in product.spec_list %}<li>{{ spec }}</li>{% empty %}<li>Premium quality product with reliable performance.</li><li>Backed by demo ecommerce service support.</li>{% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="content-panel">
+                <h4>Customer Reviews</h4>
+                <p class="mb-2"><strong>{{ product.rating }}/5</strong> based on verified demo ratings.</p>
+                <div class="review-line"><span>Design quality</span><div class="progress"><div class="progress-bar" style="width: 92%"></div></div></div>
+                <div class="review-line"><span>Value for money</span><div class="progress"><div class="progress-bar" style="width: 87%"></div></div></div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="container section-block related-slider-section">
+    <div class="section-heading"><div><span class="eyebrow">Related</span><h2>You may also like</h2></div></div>
+    <div class="related-slider">
+        {% for product in related_products %}
+        <div class="related-slide">{% include "partials/product_card.html" %}</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

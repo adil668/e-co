@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Cart - NovaMart{% endblock %}
+{% block content %}
+<section class="page-header compact">
+    <div class="container"><span class="eyebrow">Shopping Cart</span><h1>Your Cart</h1></div>
+</section>
+<section class="container section-block">
+    <div class="row g-4">
+        <div class="col-lg-8">
+            {% for item in cart.items.all %}
+            <div class="cart-line" data-item-id="{{ item.id }}">
+                <div class="cart-product">
+                    {% if item.product.display_image %}<img src="{{ item.product.display_image }}" alt="{{ item.product.name }}">{% else %}<img src="{% static item.product.fallback_image %}" alt="{{ item.product.name }}">{% endif %}
+                    <div>
+                        <h5>{{ item.product.name }}</h5>
+                        <span>{{ item.product.brand }} · ₹{{ item.product.discount_price|floatformat:2 }}</span>
+                    </div>
+                </div>
+                <div class="qty-control">
+                    <button class="qty-btn" data-step="-1">-</button>
+                    <input class="qty-input" value="{{ item.quantity }}" min="1">
+                    <button class="qty-btn" data-step="1">+</button>
+                </div>
+                <strong class="line-total">₹{{ item.line_total|floatformat:2 }}</strong>
+                <form method="post" action="{% url 'cart:remove' item.id %}">{% csrf_token %}<button class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button></form>
+            </div>
+            {% empty %}
+            <div class="empty-state">Your cart is empty. Start exploring products to build your order.</div>
+            {% endfor %}
+        </div>
+        <div class="col-lg-4">
+            <div class="summary-panel">
+                <h4>Order Summary</h4>
+                <div><span>Subtotal</span><strong id="cartSubtotal">₹{{ cart.subtotal|floatformat:2 }}</strong></div>
+                <div><span>Delivery</span><strong>Free above ₹999</strong></div>
+                <div><span>Cashback</span><strong id="cartCashback">₹{{ cart.cashback_total|floatformat:2 }}</strong></div>
+                <hr>
+                <a class="btn btn-accent w-100 btn-lg {% if not cart.items.exists %}disabled{% endif %}" href="{% url 'orders:checkout' %}">Proceed to Checkout</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

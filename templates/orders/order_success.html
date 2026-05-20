@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Order Success - NovaMart{% endblock %}
+{% block content %}
+<section class="success-section">
+    <div class="success-card">
+        <div class="success-icon"><i class="bi bi-check2-circle"></i></div>
+        <h1>Order Placed Successfully</h1>
+        <p>Order #{{ order.id }} has been created for {{ order.full_name }}.</p>
+        <div class="summary-panel text-start">
+            <div><span>Total</span><strong>₹{{ order.total|floatformat:2 }}</strong></div>
+            <div><span>Cashback Earned</span><strong>₹{{ order.cashback_earned|floatformat:2 }}</strong></div>
+            <div><span>Payment</span><strong>{{ order.get_payment_method_display }}</strong></div>
+        </div>
+        <a href="{% url 'products:list' %}" class="btn btn-accent mt-4">Continue Shopping</a>
+    </div>
+</section>
+{% endblock %}

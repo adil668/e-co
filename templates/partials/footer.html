@@ -1,0 +1,27 @@
+<footer class="footer-section mt-5">
+    <div class="container py-5">
+        <div class="row g-4">
+            <div class="col-lg-4">
+                <h4 class="brand-footer">NovaMart</h4>
+                <p class="text-white-50">A polished Django ecommerce project with catalog, cart, wishlist, checkout, admin management and cashback experiences.</p>
+            </div>
+            <div class="col-6 col-lg-2">
+                <h6>Shop</h6>
+                <a href="{% url 'products:list' %}">All Products</a>
+                <a href="{% url 'cart:wishlist' %}">Wishlist</a>
+                <a href="{% url 'cart:detail' %}">Cart</a>
+            </div>
+            <div class="col-6 col-lg-2">
+                <h6>Account</h6>
+                <a href="{% url 'users:login' %}">Login</a>
+                <a href="{% url 'users:register' %}">Register</a>
+                <a href="{% url 'users:profile' %}">Profile</a>
+            </div>
+            <div class="col-lg-4">
+                <h6>Project Highlights</h6>
+                <p class="text-white-50 mb-0">Responsive UI, AJAX cart, live search, offer timers, reusable Django templates and SQLite persistence.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">© 2026 NovaMart College Project. Built with Django and Bootstrap 5.</div>
+    </div>
+</footer>

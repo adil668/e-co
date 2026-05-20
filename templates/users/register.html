@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Register - NovaMart{% endblock %}
+{% block content %}
+<section class="auth-section">
+    <div class="auth-card wide">
+        <div class="auth-header">
+            <span class="brand-icon"><i class="bi bi-person-plus-fill"></i></span>
+            <h1>Create account</h1>
+            <p>Build your profile and start exploring cashback deals.</p>
+        </div>
+        <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+                {% for field in form %}
+                <div class="col-md-6">
+                    <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    <div class="{% if 'password' in field.name %}password-field{% endif %}">
+                        {{ field }}
+                        {% if "password" in field.name %}<button type="button" class="password-toggle"><i class="bi bi-eye"></i></button>{% endif %}
+                    </div>
+                    {% for error in field.errors %}<div class="invalid-note">{{ error }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+            <button class="btn btn-accent w-100 btn-lg mt-4">Create Account</button>
+        </form>
+        <p class="auth-switch">Already registered? <a href="{% url 'users:login' %}">Login</a></p>
+    </div>
+</section>
+{% endblock %}

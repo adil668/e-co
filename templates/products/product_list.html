@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Products - NovaMart{% endblock %}
+{% block content %}
+<section class="page-header">
+    <div class="container">
+        <span class="eyebrow">Catalog</span>
+        <h1>Explore Products</h1>
+        <p>Search, filter and sort products with a professional ecommerce listing experience.</p>
+    </div>
+</section>
+<section class="container section-block">
+    {% if not selected_category and not query %}
+    <div class="category-strip mb-4">
+        <a href="{% url 'products:list' %}" class="category-pill active">All</a>
+        {% for category in categories %}
+        <a href="{% url 'products:list' %}?category={{ category.slug }}" class="category-pill">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <div class="row g-4">
+        <aside class="col-lg-3">
+            <form class="filter-panel">
+                <h5>Filters</h5>
+                <label class="form-label">Category</label>
+                <select class="form-select" name="category">
+                    <option value="">All categories</option>
+                    {% for category in categories %}
+                    <option value="{{ category.slug }}" {% if selected_category == category.slug %}selected{% endif %}>{{ category.name }}</option>
+                    {% endfor %}
+                </select>
+                <label class="form-label mt-3">Price Range</label>
+                <div class="row g-2">
+                    <div class="col"><input class="form-control" name="min_price" placeholder="Min"></div>
+                    <div class="col"><input class="form-control" name="max_price" placeholder="Max"></div>
+                </div>
+                <label class="form-label mt-3">Sort By</label>
+                <select class="form-select" name="sort">
+                    <option value="latest" {% if sort == "latest" %}selected{% endif %}>Newest</option>
+                    <option value="price_low" {% if sort == "price_low" %}selected{% endif %}>Price: Low to High</option>
+                    <option value="price_high" {% if sort == "price_high" %}selected{% endif %}>Price: High to Low</option>
+                    <option value="rating" {% if sort == "rating" %}selected{% endif %}>Top Rated</option>
+                    <option value="discount" {% if sort == "discount" %}selected{% endif %}>Best Discount</option>
+                </select>
+                <input type="hidden" name="q" value="{{ query }}">
+                <button class="btn btn-accent w-100 mt-4">Apply Filters</button>
+            </form>
+        </aside>
+        <div class="col-lg-9">
+            <div class="catalog-toolbar">
+                <div><strong>{{ products|length }}</strong> products found{% if query %} for "{{ query }}"{% endif %}</div>
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'products:list' %}">Reset</a>
+            </div>
+            <div class="row g-4">
+                {% for product in products %}
+                <div class="col-6 col-xl-4">{% include "partials/product_card.html" %}</div>
+                {% empty %}
+                <div class="col-12"><div class="empty-state">No products matched your filters.</div></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

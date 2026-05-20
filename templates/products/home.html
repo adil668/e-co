@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}NovaMart - Premium Online Shopping{% endblock %}
+{% block content %}
+<section class="hero-section">
+    <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="hero-slide hero-one">
+                    <div class="container hero-content">
+                        <span class="hero-kicker">Mega Tech Week</span>
+                        <h1>Premium shopping experience for every college project demo</h1>
+                        <p>Discover curated electronics, fashion, essentials and cashback offers in a complete Django ecommerce platform.</p>
+                        <a href="{% url 'products:list' %}" class="btn btn-accent btn-lg"><i class="bi bi-bag"></i> Shop Now</a>
+                    </div>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="hero-slide hero-two">
+                    <div class="container hero-content">
+                        <span class="hero-kicker">Cashback Festival</span>
+                        <h1>Save more with smart deals and instant cashback badges</h1>
+                        <p>Offer cards, countdown timers and dynamic order summaries make the platform feel presentation-ready.</p>
+                        <a href="#offers" class="btn btn-light btn-lg">View Offers</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Featured</span>
+            <h2>Handpicked Products</h2>
+        </div>
+        <a href="{% url 'products:list' %}" class="link-accent">View all <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="row g-4">
+        {% for product in featured_products %}
+        <div class="col-6 col-lg-3">{% include "partials/product_card.html" %}</div>
+        {% empty %}
+        <div class="col-12"><div class="empty-state">Add featured products from Django admin to populate this section.</div></div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="promo-grid">
+        <div class="promo-card promo-primary">
+            <span class="eyebrow">Flash Sale</span>
+            <h3>Up to 35% off premium picks</h3>
+            <p>Limited-time deals across phones, sneakers, gaming accessories and creator gear.</p>
+            <a href="{% url 'products:list' %}?sort=discount" class="btn btn-accent">Explore Deals</a>
+        </div>
+        <div class="promo-card promo-secondary">
+            <span class="eyebrow">Assured Delivery</span>
+            <h3>Fast checkout with demo payments</h3>
+            <p>Card, UPI and cash-on-delivery UI built for project presentation.</p>
+        </div>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Flash Sale</span>
+            <h2>Best Discounts Today</h2>
+        </div>
+        <a href="{% url 'products:list' %}?sort=discount" class="link-accent">Shop offers <i class="bi bi-arrow-right"></i></a>
+    </div>
+    <div class="horizontal-product-rail">
+        {% for product in flash_sale_products %}
+        <div class="rail-card">{% include "partials/product_card.html" %}</div>
+        {% empty %}
+        <div class="empty-state">Run the seed command to show flash sale products.</div>
+        {% endfor %}
+    </div>
+</section>
+
+<section id="offers" class="offers-band">
+    <div class="container">
+        <div class="section-heading text-white">
+            <div>
+                <span class="eyebrow">Cashback</span>
+                <h2>Limited Time Offers</h2>
+            </div>
+        </div>
+        <div class="row g-4">
+            {% for offer in offers %}
+            <div class="col-md-4">
+                <div class="offer-card" data-countdown="{{ offer.valid_until|date:'c' }}">
+                    <div class="offer-percent">{{ offer.percentage }}%</div>
+                    <h5>{{ offer.title }}</h5>
+                    <p>{{ offer.description }}</p>
+                    <div class="countdown">Calculating...</div>
+                    <button class="btn btn-outline-light btn-sm cashback-modal-btn" data-title="{{ offer.title }}" data-desc="{{ offer.description }}">Get Cashback</button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12"><div class="offer-card"><h5>No active offers yet</h5><p>Create offers in admin to display professional cashback cards.</p></div></div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Trending</span>
+            <h2>Popular Right Now</h2>
+        </div>
+    </div>
+    <div class="row g-4">
+        {% for product in trending_products %}
+        <div class="col-6 col-lg-3">{% include "partials/product_card.html" %}</div>
+        {% empty %}
+        <div class="col-12"><div class="empty-state">Mark products as trending from admin.</div></div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="brand-band">
+    <div class="container">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">Top Brands</span>
+                <h2>Popular Brands</h2>
+            </div>
+        </div>
+        <div class="brand-grid">
+            {% for brand in popular_brands %}
+            <a href="{% url 'products:list' %}?q={{ brand }}" class="brand-tile">{{ brand }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Categories</span>
+            <h2>Shop by Department</h2>
+        </div>
+    </div>
+    <div class="category-grid">
+        {% for category in categories %}
+        <a class="category-tile" href="{% url 'products:list' %}?category={{ category.slug }}">
+            {% if category.display_image %}<img src="{{ category.display_image }}" alt="{{ category.name }}">{% else %}<img src="{% static category.fallback_image %}" alt="{{ category.name }}">{% endif %}
+            <span>{{ category.name }}</span>
+        </a>
+        {% empty %}
+        <div class="empty-state">Create featured categories to show this grid.</div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <span class="eyebrow">Department Stores</span>
+            <h2>Category Wise Products</h2>
+        </div>
+    </div>
+    {% for category in category_sections %}
+    <div class="category-product-block">
+        <div class="category-product-head">
+            <div>
+                <h3>{{ category.name }}</h3>
+                <p>{{ category.description|default:"Curated products from this department." }}</p>
+            </div>
+            <a href="{% url 'products:list' %}?category={{ category.slug }}" class="btn btn-sm btn-outline-dark">View all</a>
+        </div>
+        <div class="row g-4">
+            {% for product in category.products.all|slice:":4" %}
+            <div class="col-6 col-lg-3">{% include "partials/product_card.html" %}</div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endfor %}
+</section>
+
+<section class="newsletter-section">
+    <div class="container newsletter-inner">
+        <div>
+            <span class="eyebrow">Newsletter</span>
+            <h2>Fresh deals, straight to your inbox</h2>
+        </div>
+        <form class="newsletter-form">
+            <input class="form-control" type="email" placeholder="Enter your email">
+            <button class="btn btn-accent">Subscribe</button>
+        </form>
+    </div>
+</section>
+
+<div class="modal fade" id="cashbackModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Cashback Offer</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <h5 id="cashbackModalTitle"></h5>
+                <p id="cashbackModalDesc" class="text-muted"></p>
+                <div class="alert alert-warning mb-0">Cashback is a demo project feature and is calculated during checkout.</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
