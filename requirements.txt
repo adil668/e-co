@@ -1,7 +1,9 @@
 Django==6.0.5
 Pillow==11.1.0
+gunicorn==23.0.0
+whitenoise==6.8.2
 
 # Offline Django semantic-search chatbot
-chromadb==0.6.3
+chromadb==1.5.9
 pypdf==5.1.0
 sentence-transformers==3.3.1
