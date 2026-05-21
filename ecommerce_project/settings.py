@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     "users",
     "cart",
     "orders",
+    "chatbot",
 ]
 
 MIDDLEWARE = [
@@ -86,4 +87,27 @@ MESSAGE_TAGS = {
     25: "success",
     30: "warning",
     40: "danger",
+}
+
+CHATBOT_CHROMA_PATH = BASE_DIR / "chatbot_data" / "chroma"
+CHATBOT_COLLECTION_NAME = "website_knowledge"
+CHATBOT_EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+CHATBOT_TOP_K = 4
+CHATBOT_MIN_SCORE = 0.2
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "chatbot": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
 }

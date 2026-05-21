@@ -7,5 +7,6 @@ venv/
 env/
 media/products/
 staticfiles/
+chatbot_data/
 .idea/
 .vscode/
